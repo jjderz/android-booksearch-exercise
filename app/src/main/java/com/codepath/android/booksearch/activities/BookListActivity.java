@@ -6,8 +6,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,6 +41,7 @@ public class BookListActivity extends AppCompatActivity {
         // Checkpoint #3
         // Switch Activity to Use a Toolbar
         // see http://guides.codepath.org/android/Using-the-App-ToolBar#using-toolbar-as-actionbar
+        setSupportActionBar(findViewById(R.id.toolbar));
 
         rvBooks = findViewById(R.id.rvBooks);
         abooks = new ArrayList<>();
@@ -71,8 +74,7 @@ public class BookListActivity extends AppCompatActivity {
         // Set layout manager to position the items
         rvBooks.setLayoutManager(new LinearLayoutManager(this));
 
-        // Fetch the data remotely
-        fetchBooks("Oscar Wilde");
+
     }
 
     // Executes an API call to the OpenLibrary search endpoint, parses the results
@@ -120,6 +122,25 @@ public class BookListActivity extends AppCompatActivity {
         // Checkpoint #4
         // Add SearchView to Toolbar
         // Refer to http://guides.codepath.org/android/Extended-ActionBar-Guide#adding-searchview-to-actionbar guide for more details
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(
+
+        ) {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Fetch the data remotely
+                fetchBooks(query);
+
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 
 
         // Checkpoint #7 Show Progress Bar
